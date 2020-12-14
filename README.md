@@ -1,6 +1,9 @@
 # Spotify data vizualization app
 Dash app to visualize trends in hit music tracks from Spotify.
 
+## Deployed Heroku app
+[Spotify app](https://spotify-dash-app.herokuapp.com/)
+
 # Data collection
 Data has been collected using different API endpoints from Spotify API. Features include track name, artist information, album details, audio features like tempo, valence, energy and others.
 
@@ -11,7 +14,5 @@ Data has been collected using different API endpoints from Spotify API. Features
 
 ## Libraries
 - [Dash](https://dash.plotly.com/)
-
 - [Numpy](https://numpy.org/)
-
 - [Pandas](https://pandas.pydata.org/)
