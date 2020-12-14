@@ -262,8 +262,9 @@ def render_content(tab):
                          'paddingLeft': '5px'}
                     ]
                 ),
+                html.Br(),
                 dbc.Row([
-                    dbc.Col(dbc.Card(html.H3(children='How has audio features changed for different artist over the years',
+                    dbc.Col(dbc.Card(html.H3(children='Audio feature pattern',
                                              className="text-center text-light bg-dark"), body=True, color="dark"), className="mb-4")
                 ]),
                 dbc.Row([
@@ -453,7 +454,7 @@ def update_features_chart(year, show_artist, artist, feature):
             mode='lines+markers',
             name=feat))
     
-    fig.update_layout(title_text='Audio feature pattern', title_x=0.5,
+    fig.update_layout(title_text='How has audio features changed for artists over the years', title_x=0.5,
                     yaxis={'title': "Mean value of audio features"},
                     xaxis={'title': "Year"})
 
