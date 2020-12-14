@@ -59,6 +59,9 @@ def render_content(tab):
                 dbc.Row([
                     dbc.Col(html.H6(children='Visualising music trends across the world from 1995 - 2020', className="text-center"), className="mb-4")
                 ]),
+                dbc.Row([
+                    dbc.Col(html.A('GitHub', href='https://github.com/varsha-varadarajan/spotify-data-viz', className="text-center"))
+                ]),
                 html.Br(),
                 dbc.Row([
                     dbc.Col(dbc.Card(html.H3(children='View Top Tracks from 1995 - 2020',
