@@ -22,7 +22,11 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_ca
 
 server = app.server
 
-df = pd.read_csv('C:/Varsha/MA705/Spotify-Project/dataframe-1147.csv')
+script_dir = os.path.dirname(__file__) # the cwd relative path of the script file
+rel_path = "dataframe-1147.csv" # the target file
+rel_to_cwd_path = os.path.join(script_dir, rel_path) # the cwd-relative path of the target file
+
+df = pd.read_csv(rel_to_cwd_path)
 
 vv2 = df.groupby(['genre', 'year']).size().reset_index(name='counts').sort_values(by=['counts'])
 
