@@ -16,31 +16,26 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import dash_table
 
-
 external_stylesheets = [dbc.themes.LUX]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
 
 server = app.server
 
-script_dir = os.path.dirname(__file__) # the cwd relative path of the script file
-rel_path = "dataframe-1147.csv" # the target file
-rel_to_cwd_path = os.path.join(script_dir, rel_path) # the cwd-relative path of the target file
+# current working directory
+script_dir = os.path.dirname(__file__)
+# data folder
+data_folder = os.path.join(script_dir, "data")
+# data csv file
+rel_path = "dataframe-1147.csv"
+rel_to_cwd_path = os.path.join(data_folder, rel_path)
 
 df = pd.read_csv(rel_to_cwd_path)
 
-vv2 = df.groupby(['genre', 'year']).size().reset_index(name='counts').sort_values(by=['counts'])
-
 df_table = df[['name', 'year', 'popularity', 'duration_ms', 'album_name', 'artist_name', 'genre']]
 
-# good if there are many options
 available_artists = df['artist_name'].unique()
 
-tracks_by_genre = px.bar(vv2, x="genre", y="counts", color="year")
-tracks_by_year = px.bar(vv2, x="year", y="counts")
-
-
-# change to app.layout if running as single page app instead
 app.layout = html.Div([
         dcc.Tabs(id='tabs-example', value='tab-1', children=[
             dcc.Tab(label='Spotify Track Visualization', value='tab-1'),
@@ -50,6 +45,7 @@ app.layout = html.Div([
         
 ])
             
+# 2 tab view
 @app.callback(Output('tabs-example-content', 'children'),
               Input('tabs-example', 'value'))
 def render_content(tab):
@@ -191,7 +187,7 @@ def render_content(tab):
 
                 dbc.Row([
                     dbc.Col(html.H5(children='Top genre in year range', className="text-center"),
-                                     width=4, className="mt-4"),
+                                     width=12, className="mt-4"),
                 ]),
 
                 dbc.Row([
@@ -204,7 +200,7 @@ def render_content(tab):
             dbc.Container([
                 html.Br(),
                 dbc.Row([
-                    dbc.Col(html.H1(children='Track Audio Features', className="text-center"), className="mb-2")
+                    dbc.Col(html.H1(children='Audio Features of Hit songs', className="text-center"), className="mb-2")
                 ]),
                 dbc.Row([
                     dbc.Col(html.H6(children='Analyzing audio features over the years', className="text-center"), className="mb-4")
@@ -267,8 +263,8 @@ def render_content(tab):
                     ]
                 ),
                 dbc.Row([
-                    dbc.Col(html.H5(children='How has audio features changed for different artist over the years', className="text-center"),
-                            className="mt-4")
+                    dbc.Col(dbc.Card(html.H3(children='How has audio features changed for different artist over the years',
+                                             className="text-center text-light bg-dark"), body=True, color="dark"), className="mb-4")
                 ]),
                 dbc.Row([
                 dbc.Col(dcc.RadioItems(
@@ -318,7 +314,7 @@ def render_content(tab):
         ])
     ])
         
-# Data Table 1
+# Datatable 1
 @app.callback([Output('datatable-1', 'data'),
               Output('datatable-1', 'columns')],
              [Input('choose_columns', 'value'),
@@ -391,7 +387,7 @@ def update_feature_table(num_rows, sort_key):
         
     return data, columns
 
-# genre
+# genre bar chart
 @app.callback(Output('bar_genre', 'figure'),
               [dash.dependencies.Input('year-range', 'value')])
 def update_bar_chart(year):
@@ -410,6 +406,7 @@ def update_bar_chart(year):
     ])
 
     fig.update_layout(yaxis={'title': "Number of tracks"},
+                    xaxis={'title': "Genre"},
                     barmode='stack',
                     paper_bgcolor = 'rgba(0,0,0,0)',
                     plot_bgcolor = 'rgba(0,0,0,0)',
@@ -417,7 +414,7 @@ def update_bar_chart(year):
                     margin=dict(t=20))
     return fig
 
-# audio features
+# audio features line graph
 @app.callback(Output('audio-features', 'figure'),
               [dash.dependencies.Input('select-year', 'value'),
                Input(component_id='dropdown-to-show_or_hide-element', component_property='value'),
@@ -455,8 +452,14 @@ def update_features_chart(year, show_artist, artist, feature):
         fig.add_trace(go.Scatter(x=grouped_single['year'], y=grouped_single[feat],
             mode='lines+markers',
             name=feat))
+    
+    fig.update_layout(title_text='Audio feature pattern', title_x=0.5,
+                    yaxis={'title': "Mean value of audio features"},
+                    xaxis={'title': "Year"})
+
     return fig
 
+# toggle view of artist dropdown
 @app.callback(
    Output(component_id='select-artist', component_property='style'),
    [Input(component_id='dropdown-to-show_or_hide-element', component_property='value')])
@@ -465,7 +468,6 @@ def show_hide_element(visibility_state):
         return {'display': 'block'}
     if visibility_state == 'on':
         return {'display': 'none'}
-
 
 if __name__ == '__main__':
     app.run_server()
