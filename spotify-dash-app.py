@@ -5,6 +5,7 @@ Created on Sun Dec 13 10:27:34 2020
 @author: varsha
 """
 
+import os
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -467,4 +468,4 @@ def show_hide_element(visibility_state):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server()
